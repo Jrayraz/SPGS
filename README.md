@@ -34,10 +34,6 @@ The architecture moves past current engineering boundaries in its handling of na
 #### The Boundary of Fixed Geodesics
 In real-world astrodynamics, a natural geodesic path is locked to the fixed positions of ambient cosmic masses. If a targeted coordinate falls outside the current free-fall track, a vehicle must apply an external thrust vector to step into a different metric lane. In conventional engineering, this transition demands a standard, mass-expelling propulsion burn.
 
-#### Active Metric Manipulation
-The codebase addresses geodesic transitions by bypassing traditional engine burns entirely, relying instead on an active metric alteration sequence:
-
-```python
 delta_g = self.compute_back_reaction(ship_mass_energy)
 self.metric_engineering(delta_g)
 
@@ -52,80 +48,120 @@ The software architecture built for this system maps directly to specific, rigor
 
 This is the primary scientific classification for the core mathematical engine. General relativity relies heavily on non-linear partial differential equations (Einstein's field equations) that are notoriously difficult to solve analytically for dynamic scenarios.
 
-	Where it lives in the system:
+1. Numerical Relativity & Tensor Geometry
+Location in Codebase
+relativity_math.py
+symplectic_integrator.py
+Purpose
 
-		Inside relativity_math.py and 						symplectic_integrator.py.
+A numeric relativity sandbox designed to map non-trivial tensor-based gravitational metrics.
 
-	The Application:
+Core Functionality
+Discretizes continuous spacetime geometry into numerical arrays.
 
-		Discretizing continuous spacetime geometry 		into numerical arrays, computing 					coordinate-dependent directional changes 			using dynamic finite differences 					($\partial_\mu g_{\alpha\beta}$), and 				solving for Christoffel symbols 						($\Gamma^\mu_{\alpha\beta}$) to track 				paths through curved metrics (like the 			Schwarzschild or Kerr configurations).
+Computes coordinate-dependent directional changes using finite differences:
 
-	Terminology to use:
+∂
+μ
+	​
 
-		A numeric relativity sandbox designed to 			map non-trivial, tensor-based 						gravitational metrics."2. Hamiltonian 				Mechanics & Symplectic Geometry (Applied 			Mathematics)Instead of relying on standard 		differential equation solvers (like 				Runge-Kutta 4, which suffers from 					numerical energy dissipation over long 			flight cycles), the system maps the 				equations of motion using a conservative 			Hamiltonian structure.
-
-	Where it lives in the system:
-
-		 Inside symplectic_integrator.py.
-
-	The Application:
-
-		Solving for particle positions ($x^\mu$) 			and covariant momenta ($p_\mu$) under the 		condition that the absolute step function 		preserves phase space volume (Liouville's 		theorem) and strictly conserves energy 			over continuous iteration 								steps.Terminology to use: "A geometric 			integrator utilizing symplectic Störmer-			Verlet leapfrog routines to enforce strict 		energy conservation invariants over 				extended affine parameter scales.
-
-
-
-#### 3. Metric Engineering & Quantum Geometry (Speculative Theoretical Physics)
+g
+αβ
+	​
 
 
-This discipline covers the mechanisms in the codebase that transition from observational astronomy to proactive manipulation of spacetime curvature.
+Derives Christoffel symbols:
 
-	Where it lives in the system:
+Γ
+αβ
+μ
+	​
 
-		Inside the metric_engineering and 					compute_back_reaction methods of 					sgps_core.py.
+Uses these structures to compute geodesic trajectories in curved spacetime (e.g., Schwarzschild and Kerr metrics).
+2. Hamiltonian Mechanics & Symplectic Geometry
+Location in Codebase
+symplectic_integrator.py
+Purpose
 
-	The Application:
+A geometric integrator utilizing symplectic Störmer–Verlet leapfrog routines to enforce strict energy conservation invariants over extended affine parameter scales.
 
-		Modifying the local covariant metric 				tensor in real-time by injecting localized 		shifts ($\delta delta_g$). This models how 		a vehicle might alter its local stress-			energy tensor ($T_{\mu\nu}$) to craft 				navigable paths on the fly.
+Core Functionality
+Solves particle evolution in phase space:
+Position: x
+μ
+Covariant momentum: p
+μ
+	​
 
-	Terminology to use:
+Maintains Hamiltonian structure:
+Preserves phase space volume (Liouville’s theorem)
+Avoids numerical dissipation common in Runge–Kutta methods
+Ensures long-term energy stability in orbital and geodesic simulations
+3. Metric Engineering & Quantum Geometry (Speculative Physics Layer)
+Location in Codebase
+sgps_core.py
+metric_engineering
+compute_back_reaction
+Purpose
 
-		An active metric engineering simulation 			sandbox that models propellantless, 				geodesic navigation via dynamic local 				geometry modification.
+An active metric engineering simulation sandbox that models propellantless, geodesic navigation via dynamic local geometry modification.
 
+Core Functionality
 
-#### 4. Relativistic Astrodynamics & Celestial Mechanics (Astrophysics)
+Modifies local spacetime metric tensor in real time:
 
-This branch applies the positioning rules to macro-scale astronomical environments and realistic simulation baselines.
-
-	Where it lives in the system:
-
-		Inside real_world_sim.py, phase4_sim.py, 			and the generated telemetry tracking 				scripts.
-
-	The Application:
-
-		Modeling orbits around compact 						high-	density configurations like rotating 		stellar black holes, neutron stars, and 			supermassive galactic cores (modeled 				directly on	Sagittarius A* parameters). It 		accurately tests extreme physical effects 		such as time dilation ($\gamma$-factor 			scaling) and prograde versus retrograde 			frame-dragging (the Lense-Thirring effect).
-
-
-    Terminology to use:
-
-		An astrodynamics simulator evaluating 				extreme-orbital parameters and frame-				dragging effects around dense macro-mass 			singularities.
-
-
-#### 5. Algorithmic Deep Learning & Sequential Forecasting (Computer Science)
-
-This category governs how the software handles predictive sensor tracking without using bloated external deep-learning frameworks.
-
-    Where it lives in the system:
-
-        Inside neural_matrix.py.
+δg
+μν
+	​
 
 
-    The Application:
+Simulates interaction with stress-energy tensor:
 
-		Ingesting sequential arrays of metric 				observations to forecast forward geometric 		shifts using a pure, raw NumPy 						implementation of a recurrent predictor 			architecture.
+T
+μν
+	​
 
-    Terminology to use:
+Models feedback between geometry and matter-energy distribution (back-reaction effects)
+Generates dynamically evolving navigable geodesic fields
+4. Relativistic Astrodynamics & Celestial Mechanics
+Location in Codebase
+real_world_sim.py
+phase4_sim.py
+Telemetry tracking modules
+Purpose
 
-        	A dependency-free recurrent neural 					matrix module tracking sequential local 			observations to predict forward metric 			variations
+An astrodynamics simulator evaluating extreme-orbital parameters and frame-dragging effects around dense macro-mass singularities.
+
+Core Functionality
+Simulates motion in strong gravitational fields:
+Rotating black holes
+Neutron stars
+Supermassive galactic cores (e.g., Sagittarius A*)
+Accounts for relativistic effects:
+Time dilation (γ-factor scaling)
+Frame dragging (Lense–Thirring effect)
+Models both prograde and retrograde orbital dynamics
+5. Algorithmic Deep Learning & Sequential Forecasting
+Location in Codebase
+neural_matrix.py
+Purpose
+
+A dependency-free recurrent neural matrix module tracking sequential local observations to predict forward metric variations.
+
+Core Functionality
+Processes sequential tensor/metric observation arrays
+Implements a lightweight recurrent prediction architecture (NumPy-based)
+Forecasts future geometric evolution of spacetime or system state variables
+Designed for integration with relativistic simulation outputs
+System Summary
+
+Overall, the codebase forms a multi-layered simulation stack combining:
+
+Numerical relativity (spacetime discretization and geodesics)
+Symplectic Hamiltonian integration (energy-preserving dynamics)
+Metric manipulation models (theoretical spacetime engineering)
+Relativistic astrophysical simulation (strong-field orbital mechanics)
+Lightweight recurrent forecasting (sequence-based geometric prediction)
 
 
 #### Summary Checklist for a Technical Summary
@@ -136,3 +172,6 @@ When presenting the complete system, it can be introduced with this phrasing:"Th
 #### In Closing
 
 The system design does not adjust the vessel's internal momentum tensor directly. Instead, it alters the local covariant metric tensor ($g_{\mu\nu}$) situated immediately ahead of the coordinates. By shifting the background geometry on the fly, the craft enters a newly synthesized gravitational valley, modifying its trajectory while remaining in a weightless free-fall state.While mathematically valid within the framework of coordinate fields—conceptually aligned with Alcubierre warp geometries—this subsystem depends on generating localized stress-energy concentrations or utilizing negative energy distributions that have not been observed or replicated in physical environments.Architectural AssessmentRelativistic Tracking Core: Fully Production-Ready. The underlying physics calculator is entirely valid for tracking and logging real-world objects, such as mapping the relativistic time dilation and orbital precession of the S-star cluster looping around Sagittarius A*.Guidance & Forecasting Pipeline: Pragmatic Application. Leveraging sequence logs via the forward forecaster (neural_matrix.py) to chart background metric fields represents a viable design pattern for autonomous deep-space navigational arrays optimizing gravity-assist networks.Propellantless Propulsion Interface: Speculative Model. Navigating along the natural contours of a curved field relies on verified physical laws; however, actively engineering those metric pathways on demand remains a theoretical milestone awaiting verified quantum-gravity frameworks.
+#### Active Metric Manipulation
+The codebase addresses geodesic transitions by bypassing traditional engine burns entirely, relying instead on an active metric alteration sequence:
+ty frameworks.
