@@ -1,0 +1,10 @@
+# ====================================================================
+# SGPS SIMULATOR ENVIRONMENT REQUIREMENTS
+# Core mathematical, numeric relativity, and telemetry requirements
+# ====================================================================
+
+# Core Matrix & Tensor manipulation library
+numpy>=1.22.0
+
+# Optional analytical graphing utilities for route log extraction
+matplotlib>=3.5.0
